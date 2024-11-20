@@ -58,18 +58,18 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let news = viewModel.news[indexPath.row]
-        //        var publishedAt = String(news.publishedAt.prefix(10))
-        //
-        //        let dateFormatter = DateFormatter()
-        //
-        //        dateFormatter.dateFormat = "yyyy-mm-dd"
-        //
-        //        if let date = dateFormatter.date(from: publishedAt) {
-        //            dateFormatter.dateFormat = "dd.mm.yyyy"
-        //            publishedAt = dateFormatter.string(from: date)
-        //        }
+        var publishedAt = String(news.publishedAt.prefix(10))
         
-        cell.textLabel?.text = "\(news.publishedAt) - \(news.title)"
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "yyyy-mm-dd"
+        
+        if let date = dateFormatter.date(from: publishedAt) {
+            dateFormatter.dateFormat = "dd.mm.yyyy"
+            publishedAt = dateFormatter.string(from: date)
+        }
+        
+        cell.textLabel?.text = "\(publishedAt) - \(news.title)"
         return cell
     }
     
@@ -78,7 +78,8 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource {
             viewModel.news = []
             return
         }
-        viewModel.fetchNews(searchQuery: searchText)
+        
+        viewModel.searchPublisher.send(searchText)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
